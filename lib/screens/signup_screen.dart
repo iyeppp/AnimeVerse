@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../widgets/app_scaffold.dart';
+import 'home_screen.dart';
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
@@ -123,12 +124,20 @@ class SignUpScreen extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () {
                           // TODO: Implement sign up functionality
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                              builder: (_) => const HomeScreen(),
+                            ),
+                            (route) => false,
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue.withValues(alpha: 0.8),
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(screenWidth * 0.03),
+                            borderRadius: BorderRadius.circular(
+                              screenWidth * 0.03,
+                            ),
                           ),
                           elevation: 5,
                         ),
@@ -138,6 +147,74 @@ class SignUpScreen extends StatelessWidget {
                             fontSize: screenWidth * 0.045,
                             fontWeight: FontWeight.w600,
                           ),
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(height: screenHeight * 0.03),
+
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Divider(
+                            color: Colors.white.withValues(alpha: 0.3),
+                            thickness: 1,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: screenWidth * 0.03,
+                          ),
+                          child: Text(
+                            'or',
+                            style: TextStyle(
+                              fontSize: screenWidth * 0.035,
+                              color: Colors.white70,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Divider(
+                            color: Colors.white.withValues(alpha: 0.3),
+                            thickness: 1,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: screenHeight * 0.03),
+
+                    SizedBox(
+                      width: double.infinity,
+                      height: screenHeight * 0.075,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          // TODO: Implement Google sign up functionality
+                        },
+                        icon: SvgPicture.asset(
+                          'assets/images/google_icon.svg',
+                          height: screenWidth * 0.06,
+                          width: screenWidth * 0.06,
+                        ),
+                        label: Text(
+                          'Continue with Google',
+                          style: TextStyle(
+                            fontSize: screenWidth * 0.04,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black45,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              screenWidth * 0.03,
+                            ),
+                            side: const BorderSide(
+                              color: Colors.black45,
+                              width: 1,
+                            ),
+                          ),
+                          elevation: 3,
                         ),
                       ),
                     ),
@@ -156,7 +233,7 @@ class SignUpScreen extends StatelessWidget {
                         ),
                         TextButton(
                           onPressed: () {
-                            // TODO: Navigate to sign up screen
+                            Navigator.of(context).pop();
                           },
                           child: Text(
                             'Sign In',

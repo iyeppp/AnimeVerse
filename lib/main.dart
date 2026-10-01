@@ -1,6 +1,6 @@
-import 'package:animeverse/screens/signup_screen.dart';
-import 'package:animeverse/screens/signin_screen.dart';
 import 'package:flutter/material.dart';
+
+import 'screens/signin_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,7 +13,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'AnimeVerse',
-      theme: ThemeData(fontFamily: 'Urbanist'),
+      theme: ThemeData(
+        fontFamily: 'Urbanist',
+        brightness: Brightness.dark,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF0b395e),
+          brightness: Brightness.dark,
+        ),
+      ),
       home: const SignInScreen(),
       debugShowCheckedModeBanner: false,
     );

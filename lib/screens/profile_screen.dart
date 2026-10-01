@@ -1,0 +1,187 @@
+import 'package:flutter/material.dart';
+
+import '../widgets/app_scaffold.dart';
+import '../widgets/main_bottom_nav.dart';
+import '../widgets/profile_button.dart';
+import 'signin_screen.dart';
+
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    return AppScaffold(
+      appBar: AppBar(
+        title: Text(
+          "Profile",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w800,
+            fontSize: screenWidth * 0.06,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      bottomNavigationBar: const MainBottomNav(currentIndex: 2),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(screenWidth * 0.04),
+        child: Column(
+          children: [
+            SizedBox(height: screenHeight * 0.02),
+            // Profile Header
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+              child: Column(
+                children: [
+                  Container(
+                    width: screenWidth * 0.25,
+                    height: screenWidth * 0.25,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.3),
+                        width: 3,
+                      ),
+                    ),
+                    child: ClipOval(
+                      child: Image.asset(
+                        'assets/images/black_clover.jpg',
+                        fit: BoxFit.cover,
+                        width: screenWidth * 0.25,
+                        height: screenWidth * 0.25,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: screenHeight * 0.02),
+                  Text(
+                    'OhnePixel AnimeVerse',
+                    style: TextStyle(
+                      fontSize: screenWidth * 0.055,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(height: screenHeight * 0.005),
+                  Text(
+                    'ohneanimeverse@gmail.com',
+                    style: TextStyle(
+                      fontSize: screenWidth * 0.038,
+                      color: Colors.white70,
+                    ),
+                  ),
+                  SizedBox(height: screenHeight * 0.015),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: screenWidth * 0.04,
+                      vertical: screenHeight * 0.008,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.blue.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(screenWidth * 0.05),
+                    ),
+                    child: Text(
+                      'Member since September 2026',
+                      style: TextStyle(
+                        fontSize: screenWidth * 0.032,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: screenHeight * 0.04),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Account Settings',
+                style: TextStyle(
+                  fontSize: screenWidth * 0.045,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            SizedBox(height: screenHeight * 0.015),
+            ProfileButton(
+              icon: Icons.person_outline,
+              title: 'Change Username',
+              subtitle: 'Update your display name',
+              onTap: () {
+                // TODO: Implement change username
+              },
+            ),
+            SizedBox(height: screenHeight * 0.01),
+            ProfileButton(
+              icon: Icons.lock_outline,
+              title: 'Change Password',
+              subtitle: 'Update your account password',
+              onTap: () {
+                // TODO: Implement change password
+              },
+            ),
+            SizedBox(height: screenHeight * 0.03),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'App Information',
+                style: TextStyle(
+                  fontSize: screenWidth * 0.045,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            SizedBox(height: screenHeight * 0.015),
+            ProfileButton(
+              icon: Icons.info_outline,
+              title: 'About AnimeVerse',
+              subtitle: 'Version 1.0.0',
+              onTap: () {
+                // TODO: Implement about page
+              },
+            ),
+            SizedBox(height: screenHeight * 0.05),
+            // Logout Button
+            Container(
+              width: double.infinity,
+              margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (_) => const SignInScreen()),
+                    (route) => false,
+                  );
+                },
+                icon: Icon(Icons.logout, size: screenWidth * 0.05),
+                label: Text(
+                  'Logout',
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.045,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFD34343),
+                  foregroundColor: Colors.white,
+                  padding: EdgeInsets.symmetric(vertical: screenHeight * 0.018),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(screenWidth * 0.04),
+                  ),
+                  elevation: 0,
+                ),
+              ),
+            ),
+            SizedBox(height: screenHeight * 0.05),
+          ],
+        ),
+      ),
+    );
+  }
+}

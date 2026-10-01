@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../widgets/app_scaffold.dart';
+import 'home_screen.dart';
+import 'signup_screen.dart';
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
@@ -134,6 +136,40 @@ class SignInScreen extends StatelessWidget {
                     ),
                     SizedBox(height: screenHeight * 0.03),
 
+                    SizedBox(
+                      width: double.infinity,
+                      height: screenHeight * 0.075,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // TODO: Implement sign in functionality
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                              builder: (_) => const HomeScreen(),
+                            ),
+                            (route) => false,
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue.withValues(alpha: 0.8),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              screenWidth * 0.03,
+                            ),
+                          ),
+                          elevation: 5,
+                        ),
+                        child: Text(
+                          'Sign In',
+                          style: TextStyle(
+                            fontSize: screenWidth * 0.045,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: screenHeight * 0.03),
+
                     Row(
                       children: [
                         Expanded(
@@ -162,33 +198,6 @@ class SignInScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: screenHeight * 0.03),
-
-                    SizedBox(
-                      width: double.infinity,
-                      height: screenHeight * 0.075,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // TODO: Implement sign in functionality
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue.withValues(alpha: 0.8),
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(screenWidth * 0.03),
-                          ),
-                          elevation: 5,
-                        ),
-                        child: Text(
-                          'Sign In',
-                          style: TextStyle(
-                            fontSize: screenWidth * 0.045,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-
                     SizedBox(height: screenHeight * 0.03),
 
                     SizedBox(
@@ -240,7 +249,11 @@ class SignInScreen extends StatelessWidget {
                         ),
                         TextButton(
                           onPressed: () {
-                            // TODO: Navigate to sign up screen
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const SignUpScreen(),
+                              ),
+                            );
                           },
                           child: Text(
                             'Sign Up',
