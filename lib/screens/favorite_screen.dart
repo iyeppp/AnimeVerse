@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-
-import '../data/dummy_data.dart';
+import 'package:provider/provider.dart';
+import '../providers/app_state_provider.dart';
 import '../widgets/app_scaffold.dart';
 import '../widgets/favorite_anime_card.dart';
-import '../widgets/main_bottom_nav.dart';
 
 class FavoriteScreen extends StatelessWidget {
   const FavoriteScreen({super.key});
@@ -13,14 +12,10 @@ class FavoriteScreen extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    // Untuk sementara seluruh data dummy ditampilkan sebagai daftar favorit.
-    // Nanti diganti dengan data favorit yang tersimpan (local storage/Firebase).
-    final favoriteAnimeList = DummyData.animeList;
-
     return AppScaffold(
       appBar: AppBar(
         title: Text(
-          "Favorite Anime",
+          'Favorite Anime',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w800,
@@ -31,21 +26,44 @@ class FavoriteScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      bottomNavigationBar: const MainBottomNav(currentIndex: 1),
       body: Column(
         children: [
+          // (Search bar ditambahkan di Tahap 14)
           SizedBox(height: screenHeight * 0.01),
+
+          // Daftar Anime Favorit
           Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.symmetric(vertical: screenHeight * 0.01),
-              itemCount: favoriteAnimeList.length,
-              itemBuilder: (context, index) {
-                final anime = favoriteAnimeList[index];
-                return FavoriteAnimeCard(
-                  title: anime.title,
-                  genre: anime.genre,
-                  rating: anime.rating,
-                  imagePath: anime.imagePath,
+            child: Consumer<AppStateProvider>(
+              builder: (context, favoriteProvider, child) {
+                final favorites = favoriteProvider.favorites;
+
+                // Empty state: tampil kalau belum ada favorit
+                if (favorites.isEmpty) {
+                  return const Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.favorite_border, size: 64, color: Colors.white70),
+                        SizedBox(height: 8),
+                        Text('Belum ada anime favorit', style: TextStyle(color: Colors.white70, fontSize: 16)),
+                      ],
+                    ),
+                  );
+                }
+
+                return ListView.builder(
+                  padding: EdgeInsets.symmetric(vertical: screenHeight * 0.01),
+                  itemCount: favorites.length,
+                  itemBuilder: (context, index) {
+                    final anime = favorites[index];
+                    return FavoriteAnimeCard(
+                      id: anime.id,
+                      title: anime.title,
+                      genre: anime.genre,
+                      rating: anime.rating,
+                      imagePath: anime.imagePath,
+                    );
+                  },
                 );
               },
             ),

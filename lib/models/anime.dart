@@ -16,4 +16,32 @@ class Anime {
     required this.totalEpisodes,
     required this.description,
   });
+
+ // ubah data jadi map
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'imagePath': imagePath,
+      'genre': genre,
+      'rating': rating,
+      'totalEpisodes': totalEpisodes,
+      'description': description,
+    };
+  }
+
+  // ubah map jadi data
+  factory Anime.fromJson(Map<String, dynamic> json) {
+    return Anime(
+      id: json['id'] as String,
+      title: json['title'] as String,
+      imagePath: json['imagePath'] as String,
+      genre: json['genre'] as String,
+      rating: json['rating'] as String,
+      totalEpisodes: json['totalEpisodes'] as String,
+      description: json['description'] as String,
+    );
+  }
 }
+
+

@@ -1,6 +1,10 @@
+import 'package:animeverse/config/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
 
 class FavoriteAnimeCard extends StatelessWidget {
+  final String id;
   final String title;
   final String genre;
   final String rating;
@@ -8,6 +12,7 @@ class FavoriteAnimeCard extends StatelessWidget {
 
   const FavoriteAnimeCard({
     super.key,
+    required this.id,
     required this.title,
     required this.genre,
     required this.rating,
@@ -18,7 +23,11 @@ class FavoriteAnimeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    return Card(
+    return GestureDetector(
+      onTap: () {
+        context.push('${AppRoutes.details}/$id');
+      },
+    child: Card(
       margin: EdgeInsets.symmetric(
         horizontal: screenWidth * 0.04,
         vertical: screenHeight * 0.01,
@@ -86,6 +95,7 @@ class FavoriteAnimeCard extends StatelessWidget {
           ],
         ),
       ),
+    ),
     );
   }
 }
