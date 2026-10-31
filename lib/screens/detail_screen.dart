@@ -138,7 +138,9 @@ if (anime == null) {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Rating and Episodes info
-                  Row(
+                  Wrap(
+                    spacing: screenWidth * 0.03,
+                    runSpacing: screenHeight * 0.01,
                     children: [
                       // Rating
                       Container(
@@ -179,7 +181,6 @@ if (anime == null) {
                           ],
                         ),
                       ),
-                      SizedBox(width: screenWidth * 0.05),
                       // Total Episodes
                       Container(
                         padding: EdgeInsets.symmetric(
@@ -208,7 +209,6 @@ if (anime == null) {
                           ),
                         ),
                       ),
-                      SizedBox(width: screenWidth * 0.05),
                       // Add to Favorites
                       Consumer<AppStateProvider>(
                       builder: (context, favoriteProvider, child) {

@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 
-import '../data/dummy_data.dart';
 import '../models/anime.dart';
-import '../screens/detail_screen.dart';
 import 'anime_card.dart';
 
 class AnimeView extends StatelessWidget {
-  final List<Anime>? animeList;
+  final List<Anime> animelist;
 
-  const AnimeView({super.key, this.animeList});
+  const AnimeView({super.key, required this.animelist});
 
   @override
   Widget build(BuildContext context) {
-    final list = animeList ?? DummyData.animeList;
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: MediaQuery.of(context).size.width * 0.04,
@@ -40,22 +37,14 @@ class AnimeView extends StatelessWidget {
               crossAxisSpacing: constraints.maxWidth * 0.05,
               childAspectRatio: childAspectRatio,
             ),
-            itemCount: list.length,
+            itemCount: animelist.length,
             itemBuilder: (context, index) {
-              final anime = list[index];
+              final anime = animelist[index];
+              // AnimeCard sudah handle navigasi via GoRouter secara internal
               return AnimeCard(
                 id: anime.id,
                 title: anime.title,
                 imagePath: anime.imagePath,
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => DetailScreen(
-                        id: anime.id,
-                      ),
-                    ),
-                  );
-                },
               );
             },
           );

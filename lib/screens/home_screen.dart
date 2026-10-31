@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../data/dummy_data.dart';
-import '../models/anime.dart';
+import '../providers/app_state_provider.dart';
 import '../widgets/anime_view.dart';
 import '../widgets/app_scaffold.dart';
 import '../widgets/genre_list.dart';
 import '../widgets/main_bottom_nav.dart';
+import '../widgets/search_field.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,25 +16,29 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String _searchQuery = '';
-  String _selectedGenre = 'All';
+  late final TextEditingController _searchController;
 
-  List<Anime> get _filteredAnime {
-    return DummyData.animeList.where((anime) {
-      final matchesGenre =
-          _selectedGenre == 'All' ||
-          anime.genre.toLowerCase().contains(_selectedGenre.toLowerCase());
-      final matchesSearch =
-          _searchQuery.isEmpty ||
-          anime.title.toLowerCase().contains(_searchQuery.toLowerCase());
-      return matchesGenre && matchesSearch;
-    }).toList();
+  @override
+  void initState() {
+    super.initState();
+    final initialQuery = context.read<AppStateProvider>().homeSearchQuery;
+    _searchController = TextEditingController(text: initialQuery);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+
+    final provider = context.watch<AppStateProvider>();
+    final filteredAnime = provider.getFilteredAnimeForHome();
+
     return AppScaffold(
       appBar: AppBar(
         title: Text(
@@ -54,72 +59,22 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Search Bar
-            Padding(
-              padding: EdgeInsets.all(screenWidth * 0.04),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(screenWidth * 0.075),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.3),
-                      blurRadius: screenWidth * 0.02,
-                      offset: Offset(0, screenHeight * 0.005),
-                    ),
-                  ],
-                ),
-                child: TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      _searchQuery = value;
-                    });
-                  },
-                  decoration: InputDecoration(
-                    hintText: "Anime Title",
-                    hintStyle: TextStyle(
-                      color: Colors.grey,
-                      fontSize: screenWidth * 0.04,
-                    ),
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: Colors.grey,
-                      size: screenWidth * 0.06,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(screenWidth * 0.075),
-                      borderSide: BorderSide.none,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(screenWidth * 0.075),
-                      borderSide: BorderSide.none,
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(screenWidth * 0.075),
-                      borderSide: const BorderSide(color: Colors.white),
-                    ),
-                    filled: true,
-                    fillColor: const Color(0xFF0b395e),
-                    contentPadding: EdgeInsets.symmetric(
-                      horizontal: screenWidth * 0.05,
-                      vertical: screenHeight * 0.015,
-                    ),
-                  ),
-                  style: TextStyle(
-                    fontSize: screenWidth * 0.04,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-            GenreList(
-              selected: _selectedGenre,
-              onGenreSelected: (genre) {
-                setState(() {
-                  _selectedGenre = genre;
-                });
+            SearchField(
+              controller: _searchController,
+              hintText: 'Anime Title',
+              onChanged: (value) => provider.setHomeSearchQuery(value),
+              showClear: provider.homeSearchQuery.isNotEmpty,
+              onClear: () {
+                _searchController.clear();
+                provider.setHomeSearchQuery('');
               },
             ),
+            GenreList(
+              selected: provider.selectedGenre,
+              onGenreSelected: (genre) => provider.setSelectedGenre(genre),
+            ),
             SizedBox(height: screenHeight * 0.03),
-            AnimeView(animeList: _filteredAnime),
+            AnimeView(animelist: filteredAnime),
             SizedBox(height: screenHeight * 0.025),
           ],
         ),

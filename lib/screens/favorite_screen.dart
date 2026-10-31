@@ -3,9 +3,30 @@ import 'package:provider/provider.dart';
 import '../providers/app_state_provider.dart';
 import '../widgets/app_scaffold.dart';
 import '../widgets/favorite_anime_card.dart';
+import '../widgets/search_field.dart';
 
-class FavoriteScreen extends StatelessWidget {
+class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({super.key});
+
+  @override
+  State<FavoriteScreen> createState() => _FavoriteScreenState();
+}
+
+class _FavoriteScreenState extends State<FavoriteScreen> {
+  late final TextEditingController _searchController;
+
+  @override
+  void initState() {
+    super.initState();
+    final initialQuery = context.read<AppStateProvider>().favoriteSearchQuery;
+    _searchController = TextEditingController(text: initialQuery);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,24 +49,60 @@ class FavoriteScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          // (Search bar ditambahkan di Tahap 14)
-          SizedBox(height: screenHeight * 0.01),
+          // Search Bar
+          Consumer<AppStateProvider>(
+            builder: (context, provider, child) {
+              return SearchField(
+                controller: _searchController,
+                hintText: 'Search favorites',
+                onChanged: (value) => provider.setFavoriteSearchQuery(value),
+                showClear: provider.favoriteSearchQuery.isNotEmpty,
+                onClear: () {
+                  _searchController.clear();
+                  provider.setFavoriteSearchQuery('');
+                },
+              );
+            },
+          ),
+
+          SizedBox(height: screenHeight * 0.005),
 
           // Daftar Anime Favorit
           Expanded(
             child: Consumer<AppStateProvider>(
               builder: (context, favoriteProvider, child) {
-                final favorites = favoriteProvider.favorites;
+                final allFavorites = favoriteProvider.favorites;
+                final favorites = favoriteProvider.getFilteredFavorites();
 
-                // Empty state: tampil kalau belum ada favorit
+                // Empty state: belum ada favorit sama sekali
+                if (allFavorites.isEmpty) {
+                  return const Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.favorite_border, size: 32, color: Colors.white70),
+                        SizedBox(height: 8),
+                        Text(
+                          'Belum ada anime favorit',
+                          style: TextStyle(color: Colors.white70, fontSize: 16),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
+                // Empty state: ada favorit tapi tidak ada yang cocok dengan pencarian
                 if (favorites.isEmpty) {
                   return const Center(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.favorite_border, size: 64, color: Colors.white70),
+                        Icon(Icons.search_off, size: 64, color: Colors.white70),
                         SizedBox(height: 8),
-                        Text('Belum ada anime favorit', style: TextStyle(color: Colors.white70, fontSize: 16)),
+                        Text(
+                          'Anime tidak ditemukan',
+                          style: TextStyle(color: Colors.white70, fontSize: 16),
+                        ),
                       ],
                     ),
                   );
